@@ -1,8 +1,11 @@
-def reverse_five(string)
-  if string.length > 5
-    string.split.reverse.join
-  end
+def reverse_words(string)
+  ar = string.split.map do |word|
+                            word.length >= 5 ? word.reverse : word
+                        end  
+  ar.join(' ')
 end
 
-p reverse_five("hey")
-p reverse_five('hey there hola')
+puts reverse_words("hey there how ya doing")
+puts reverse_words("Launch School word up")
+
+

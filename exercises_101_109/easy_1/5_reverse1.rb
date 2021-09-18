@@ -6,10 +6,10 @@
   #-any number of spaces returns ""
 
 def reverse(string)
-  string.split.reverse.join
+  string.split.reverse.join(' ')
 end
 
 puts reverse("hello there")
-#puts reverse("hey") == "hey"
+puts reverse("hey") == "hey"
 
 puts reverse("     ") == ""

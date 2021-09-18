@@ -5,8 +5,7 @@
 
 def digit_list(dig)
   arr = dig.to_s.split(//)
-  arr = arr.map { |num| num.to_i }
-  p arr
+  p arr.map { |num| num.to_i }
 end
 
 digit_list(124325)
