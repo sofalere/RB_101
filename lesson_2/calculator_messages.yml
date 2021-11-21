@@ -1,0 +1,8 @@
+welcome: 'Welcome to the calculator! Please enter your name:'
+greet: "Hey there!"
+hype_up: "Lets calculate!"
+ask_for_first_num: "Whats the first number?"
+invalid_number: "Please enter a valid number."
+ask_for_second_num: "And the second?"
+operation: "What would you like to do?"
+another_operation: "Would you like to perform another operation? (Y to calculate some more!)"
