@@ -44,3 +44,6 @@ my_numbers = [1, 4, 3, 7, 2, 6]
 p double_numbers!(my_numbers)
 
 p my_numbers
+
+# my_numbers = [1, 4, 3, 7, 2, 6]
+# double_numbers(my_numbers)

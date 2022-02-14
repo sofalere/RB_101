@@ -20,7 +20,7 @@ def count_occurrences(array)
     occurrences[veh] = ar.count(veh)
   end
   
-  occurrences.each do |veh, count|                    #whats happening here? how did this change the vehicles from a string to a symbol?
+  occurrences.each do |veh, count|                    
     puts "#{veh}: #{count}"
   end
   

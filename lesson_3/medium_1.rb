@@ -90,3 +90,11 @@
 # end
 
 # bar(foo)
+
+
+# 1.
+10.times do |num|
+  puts num
+  puts "The Flintstones Rock!".center(num)
+end
+

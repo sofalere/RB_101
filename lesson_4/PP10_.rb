@@ -1,13 +1,13 @@
 #add a new key value pair to each nester hash based on the value of the "age" key
 
 
-munsters = {
-  "Herman" => { "age" => 32, "gender" => "male" },
-  "Lily" => { "age" => 30, "gender" => "female" },
-  "Grandpa" => { "age" => 402, "gender" => "male" },
-  "Eddie" => { "age" => 10, "gender" => "male" },
-  "Marilyn" => { "age" => 23, "gender" => "female"}
-}
+# munsters = {
+#   "Herman" => { "age" => 32, "gender" => "male" },
+#   "Lily" => { "age" => 30, "gender" => "female" },
+#   "Grandpa" => { "age" => 402, "gender" => "male" },
+#   "Eddie" => { "age" => 10, "gender" => "male" },
+#   "Marilyn" => { "age" => 23, "gender" => "female"}
+# }
 
 
 
@@ -33,8 +33,8 @@ munsters = {
 
 
 
-p family_member = munsters.values
-p family_member['age']
+# p family_member = munsters.values
+# p family_member['age']
 
 # eh = munsters.map do |key, val|
 #   age = val.v          
@@ -44,4 +44,14 @@ p family_member['age']
 #   "#{key}  #{val.values}"
 # end
 # end
+
+arr1 = ["a", "b", "c"]
+arr2 = arr1.dup
+arr2.map! do |char|
+  p char.object_id
+  char.upcase
+end
+
+p arr1
+p arr2
 

@@ -86,25 +86,27 @@ def empty_squares(grid)
   empty.keys
 end
 
+def valid_int?(num)
+  num.to_i.to_s == num
+end
+
 def player_choice!(grid)
   player_move = ''
   loop do
     prompt("Please choose a square: #{joinor(empty_squares(grid))}")
-    player_move = gets.chomp.to_i
-    break if empty_squares(grid).include?(player_move)
+    player_move = gets.chomp
+    binding.pry
+    break if empty_squares(grid).include?(player_move.to_i) && valid_int?(player_move)
     prompt("Sorry, not a valid choice.")
   end
-  grid[player_move] = PLAYER_PIECE
+  grid[player_move.to_i] = PLAYER_PIECE
 end
 
 def computer_choice!(grid)
-  if computer_move = smart_move(grid, COMPUTER_PIECE)
-  elsif computer_move = smart_move(grid, PLAYER_PIECE)
-  elsif empty_squares(grid).include?(5)
-    computer_move = 5
-  else
-    computer_move = empty_squares(grid).sample
-  end
+  computer_move ||= smart_move(grid, COMPUTER_PIECE)
+  computer_move ||= smart_move(grid, PLAYER_PIECE)
+  computer_move ||= 5 if empty_squares(grid).include?(5)
+  computer_move ||= empty_squares(grid).sample
   grid[computer_move] = COMPUTER_PIECE
 end
 
@@ -150,33 +152,23 @@ end
 
 def determine_score(grid, score)
   if detect_winner(grid) == 'Player'
-    score[:player] << 1
+    score[:player] += 1
   elsif detect_winner(grid) == 'Computer'
-    score[:computer] << 1
+    score[:computer] += 1
   end
-end
-
-def computer_score(score)
-  score[:computer].size
-end
-
-def player_score(score)
-  score[:player].size
 end
 
 def score_display(score)
-  prompt("Player score: #{player_score(score)}")
-  prompt("Computer score: #{computer_score(score)}")
+  prompt("Player score: #{score[:player]}")
+  prompt("Computer score: #{score[:computer]}")
 end
 
 def determine_champion(score)
-  if player_score(score) == 5
+  if score[:player] == 5
     return 'Player'
-  elsif computer_score(score) == 5
+  elsif score[:computer] == 5
     return 'Computer'
   end
-  nil
-  binding.pry
 end
 
 def place_piece!(grid, current_player)
@@ -206,8 +198,8 @@ loop do
   current_player = determine_who_goes_first
   prompt "#{current_player.capitalize} goes first..."
 
-  score = { player: [],
-            computer: [] }
+  score = { player: 0,
+            computer: 0 }
 
   loop do
     start_grid = {}

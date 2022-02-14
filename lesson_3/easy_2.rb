@@ -13,11 +13,12 @@
 # ages = { "Herman" => 32, "Lily" => 30, "Grandpa" => 5843, "Eddie" => 10 }
 # additional_ages = { "Marilyn" => 22, "Spot" => 237 }
 # p ages.merge(additional_ages)
+# p ages
 
 ### 4.
 # advice = "Few things in life are as important as house training your pet dinosaur."
 # p advice.include?('dino')
-
+# p advice.match?('dino')
 
 ### 5.
 # flintstones = ["Fred", "Barney", "Wilma", "Betty", "BamBam", "Pebbles"]

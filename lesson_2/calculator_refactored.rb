@@ -1,4 +1,7 @@
 require "pry"
+require "yaml"
+MESSAGES = YAML.load_file('calculator_messages.yml')
+
 
 def prompt(message)
   puts "=> #{message}"
@@ -8,53 +11,83 @@ def valid_number?(num)
   num.to_i.to_s == num
 end
 
+def valid_float?(num)
+  num.to_f.to_s == num
+end
+
+def number?(num)
+  valid_number?(num) || valid_float?(num)
+end
+
 def op_to_message(op)
+  word =  case op
+          when "1"
+            'adding'
+          when "2"
+            'subtracting'
+          when "3"
+            'multiplying'
+          when "4"
+            'dividing'
+          end
+  word
+end
+
+# def add(numb1, numb2)
+#   numb1.to_f + numb2.to_f
+# end
+
+# def subtract(numb1, numb2)
+#   numb1.to_f - numb2.to_f
+# end
+
+# def multiply(numb1, numb2)
+#   numb1.to_f * numb2.to_f
+# end
+
+# def divide(numb1, numb2)
+#   numb1.to_f / numb2.to_f
+# end
+
+def calculate(op, num1, num2)
   case op
-  when "1"
-    'adding'
-  when "2"
-    'subtracting'
-  when "3"
-    'multiplying'
-  when "4"
-    'dividing'
+  when '3' then num1 * num2
+  when '4' then num1 / num2
+  when '2' then num1 - num2
+  when '1' then num1 + num2
   end
 end
 
-prompt 'Welcome to the calculator! Please enter your name:'
-name = gets.chomp
-
-prompt "Hey there #{name}!"
-prompt 'Lets calculate!'
+prompt(MESSAGES['welcome'])
+name = gets.chomp.capitalize
+prompt(MESSAGES['greet'])
+prompt(MESSAGES['hype_up'])
 
 loop do
   num1 = ''
-  prompt "Whats the first number?"
+  prompt(MESSAGES['ask_for_first_num'])
   
   loop do
     num1 = gets.chomp
-    if valid_number?(num1)
-      break
-    else
-      prompt"Please enter a valid number."
-    end
+    break if number?(num1)
+    prompt(MESSAGES['invalid_number'])
   end
   
   
   num2 = ''
-  prompt "and the second?"
+  prompt(MESSAGES['ask_for_second_num'])
   
   loop do
     num2 = gets.chomp
-    if valid_number?(num2)
+    if number?(num2)
       break
     else
-      prompt "Please enter a valid number."
+      prompt(MESSAGES['invalid_number'])
     end
   end
     
   operator_prompt = <<-YUP
-  What would you like to do? 
+  #{(MESSAGES['operation'])} 
   1.) add 
   2.) subtract 
   3.) multiply 
@@ -66,42 +99,22 @@ loop do
   
   loop do
     operation = gets.chomp
-    if (1..4).include? operation.to_i        #book says use %w(1 2 3 4) that makes an array of strings, the operator doesnt need <.to_i>
+    if %w[ 1 2 3 4].include?(operation)
       break
-    else
+    else 
       prompt("Please choose 1, 2, 3, or 4")
     end
   end
  
   
-  result = case operation
-           when "1"
-             num1.to_i + num2.to_i
-           when "2"
-             num1.to_i - num2.to_i
-           when "3"
-             num1.to_i * num2.to_i
-           when "4"
-             num1.to_f / num2.to_f
-           else prompt("Thats an invalid input, please put 1,2,3 or 4")
-           end
+  result = calculate(operation, num1.to_i, num2.to_i)
+          # else prompt(MESSAGES['welcome'] + "please put 1,2,3 or 4")
+          # end
   
-  #op_word = case operation
-   # when "1"
-   #   'adding'
-    #when "2"
-     # 'subtracting'
-    #when "3"
-     # 'multiplying'
-    #when "4"
-     # 'dividing'
-    #end
   
   prompt("#{op_to_message(operation).capitalize} your two numbers...")
   prompt("The result is #{result}!")
-  
-  prompt('Would you like to perform another operation? (Y to calculate some more!)')
+  prompt(MESSAGES['another_operation'])  
   continue = gets.chomp
   break unless continue == 'Y'
-  binding.pry
 end

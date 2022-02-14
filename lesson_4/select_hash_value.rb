@@ -44,28 +44,37 @@ create a loop that iterates over the hash, selecting only those key value pairs 
 # end
 
 
-def select_fruit(hash_name)
+# def select_fruit(hash_name)
   
-  fruit_pairs = {}
-  counter = 0
-  specific_food = hash_name.keys
+#   fruit_pairs = {}
+#   counter = 0
+#   specific_food = hash_name.keys
   
-  loop do    
-    break if counter == specific_food.length
+#   loop do    
+#     break if counter == specific_food.length
 
-    current_food = specific_food[counter]
-    current_value = hash_name[current_food]
+#     current_food = specific_food[counter]
+#     current_value = hash_name[current_food]
     
-    if current_value == 'Fruit'
-      fruit_pairs[current_food] = current_value
-    end
+#     if current_value == 'Fruit'
+#       fruit_pairs[current_food] = current_value
+#     end
     
-    counter += 1
-  end
+#     counter += 1
+#   end
   
-  fruit_pairs
-end
+#   fruit_pairs
+# end
 
+
+# produce = {
+#   'apple' => 'Fruit',
+#   'carrot' => 'Vegetable',
+#   'pear' => 'Fruit',
+#   'broccoli' => 'Vegetable'
+# }
+
+# p select_fruit(produce) 
 
 produce = {
   'apple' => 'Fruit',
@@ -74,4 +83,10 @@ produce = {
   'broccoli' => 'Vegetable'
 }
 
-p select_fruit(produce) 
+
+def select_fruit(pairs)
+  pairs.select { |key, val| val == 'Fruit' }
+end
+
+p select_fruit(produce)
+
