@@ -12,6 +12,8 @@ module Verifiable
 end
 
 module History
+  attr_reader :history
+
   def init_history
     @history = []
   end
@@ -26,10 +28,16 @@ module History
   def save_move
     history << move.type
   end
+
+  private
+
+  attr_writer :history
 end
 
 module Points
-  WINNING_SCORE = 10
+  attr_reader :points
+
+  WINNING_SCORE = 5
 
   def init_points
     @points = 0
@@ -42,6 +50,10 @@ module Points
   def won?
     points >= WINNING_SCORE
   end
+
+  private
+
+  attr_writer :points
 end
 
 class User
@@ -50,7 +62,6 @@ class User
   include Points
 
   attr_accessor :move, :name
-  attr_reader :points, :history
 
   def initialize
     set_round_tracking!
@@ -63,16 +74,13 @@ class User
   end
 
   def display_move
+    puts
     puts "#{name} chose #{move}."
   end
 
   def to_s
     name
   end
-
-  protected
-
-  attr_writer :points, :history
 end
 
 class Human < User
@@ -99,10 +107,6 @@ class Human < User
 end
 
 class Computer < User
-  def initialize
-    super
-  end
-
   def choice
     self.move = name.choice(history)
     display_move
@@ -113,6 +117,10 @@ class Computer < User
 
   def set_name
     self.name = [R2D2.new, Chappie.new, Sonny.new].sample
+  end
+
+  def initialize
+    super
   end
 end
 
@@ -253,13 +261,13 @@ class RPSGame
   attr_accessor :human, :computer
 
   def game_body
-    display_competitors
+    # display_competitors
 
     loop do
+      display_competitors
       human.choice
       computer.choice
       display_winner
-      display_points
       break display_game_winner, reset_scores! if game_end?
     end
   end
@@ -282,6 +290,7 @@ class RPSGame
     puts
     puts centered("#{human.name} vs. #{computer.name}")
     puts
+    display_points
   end
 
   def reset_scores!
@@ -307,6 +316,9 @@ class RPSGame
     when :human then puts centered("#{human.name} won!")
     else puts centered("It's a tie!")
     end
+    puts
+    puts "enter to continue"
+    gets
   end
 
   def display_points
@@ -321,6 +333,8 @@ class RPSGame
   end
 
   def display_game_winner
+    system "clear"
+    display_points
     if computer.points > human.points
       puts "#{computer.name} won it all, with #{computer.points}!!"
     else
@@ -331,7 +345,9 @@ class RPSGame
   def view_history?
     puts
     puts "Enter 'y' to view round history, 'n' to continue without."
-    [human, computer].each(&:display_history) if verified_input == 'y'
+    return unless verified_input == 'y'
+    system "clear"
+    [human, computer].each(&:display_history)
   end
 
   def play_again?
