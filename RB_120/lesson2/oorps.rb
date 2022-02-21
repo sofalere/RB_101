@@ -261,8 +261,6 @@ class RPSGame
   attr_accessor :human, :computer
 
   def game_body
-    # display_competitors
-
     loop do
       display_competitors
       human.choice
