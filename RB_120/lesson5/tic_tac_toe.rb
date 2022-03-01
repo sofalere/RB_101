@@ -3,11 +3,17 @@ module Verifiable
     input = nil
     loop do
       input = gets.chomp.downcase
-      input = input.to_i if input.to_i.to_s == input
+      input = input.to_i if num?(input) && !for_name
       break if for_name ? input.match(valid) : valid.include?(input)
       puts "Sorry not a valid entry. #{prompt}"
     end
     input
+  end
+
+  private
+
+  def num?(input)
+    input.to_i.to_s == input
   end
 end
 
@@ -56,21 +62,21 @@ class Board < Square
     else "#{unmarked_keys[0..size - 3].join(', ')}, #{last_two}"
     end
   end
-  
-  def random_unmarked_square
-    squares[5].unmarked? ? 5 : unmarked_keys.sample
-  end
 
-  def defense_neccessary?(lines = WINNING_LINES)
-    lines.any? do |line|
-      two_equal_marks?(line) && line.any? { |key| squares[key].unmarked? }
-    end
+  def five_or_random_unmarked_square
+    squares[5].unmarked? ? 5 : unmarked_keys.sample
   end
 
   def offense_neccessary?(comp_marker, lines = WINNING_LINES)
     lines.any? do |line|
       line.count { |key| squares[key].marker == comp_marker } == 2 &&
         line.any? { |key| squares[key].unmarked? }
+    end
+  end
+
+  def defense_neccessary?(lines = WINNING_LINES)
+    lines.any? do |line|
+      two_equal_marks?(line) && line.any? { |key| squares[key].unmarked? }
     end
   end
 
@@ -92,20 +98,20 @@ class Board < Square
   end
 
   def offense_square(marker)
-    offense_sqr = nil
+    square = nil
     WINNING_LINES.any? do |line|
       if offense_possible?(marker, [line])
-        offense_sqr = select_unmarked_space(line)
+        square = select_unmarked_space(line)
       end
     end
-    offense_sqr
+    square
   end
 
   def winning_marker
     winning_marker = nil
     WINNING_LINES.any? do |lines|
-      marks_on_lines = lines.map { |key| squares[key].marker.to_s }
-      winning_marker = marks_on_lines.first if matching?(marks_on_lines)
+      marks_per_line = lines.map { |key| squares[key].marker.to_s }
+      winning_marker = marks_per_line.first if matching?(marks_per_line)
     end
     winning_marker
   end
@@ -143,9 +149,9 @@ class Board < Square
     line.select { |key| squares[key].unmarked? }.first
   end
 
-  def matching?(input)
-    input.sort!
-    input.min == input.max
+  def matching?(marks)
+    marks.sort!
+    marks.min == marks.max
   end
 
   def two_equal_marks?(line)
@@ -158,6 +164,7 @@ end
 
 class User
   attr_accessor :name, :marker, :points
+
   def initialize
     set_name
   end
@@ -177,6 +184,7 @@ end
 
 class Player < User
   include Verifiable
+
   def initialize
     super
   end
@@ -186,13 +194,13 @@ class Player < User
     puts
     puts "#{name}, enter the marker you'd like for this round: O / X"
     puts
-    @marker = verified_input(['o', 'x'], "(o / x)").upcase
+    @marker = verified_input(['o', 'x'], "(O / X)").upcase
   end
 
   def mark(board)
     puts "Which square would you like to put your (#{marker})?"
-    location = verified_input(board.unmarked_keys, board.display_unmarked)
-    board[location] = marker
+    square = verified_input(board.unmarked_keys, board.display_unmarked)
+    board[square] = marker
   end
 
   private
@@ -224,7 +232,7 @@ class Computer < User
   def set_name
     @name = ["Compie", "LilComp", "BoneBitsnHarmony"].sample
   end
-  
+
   def next_move(board)
     if board.offense_neccessary?(marker)
       board.at_risk_square(marker)
@@ -233,7 +241,7 @@ class Computer < User
     elsif board.offense_possible?(marker)
       board.offense_square(marker)
     else
-      board.random_unmarked_square
+      board.five_or_random_unmarked_square
     end
   end
 end
@@ -264,7 +272,7 @@ class TTTGame
     @player = Player.new
     @computer = Computer.new
   end
-  
+
   def centered(str)
     str.center(60)
   end
@@ -273,8 +281,8 @@ class TTTGame
     puts centered("Welcome to tic tac toe! First player to 5 wins!")
     puts
     puts centered("#{player.name} vs. #{computer.name}")
-    puts 
-    puts "press enter to continue"
+    puts
+    puts "Press enter to continue."
     gets
   end
 
@@ -282,7 +290,7 @@ class TTTGame
     loop do
       round_body
       display_board
-      display_winner_add_point
+      display_winner_and_points
       break if someone_won_game?
       reset_round!
     end
@@ -292,17 +300,18 @@ class TTTGame
   def round_body
     loop do
       clear_screen_and_display_board
-      switch_current_player
-      current_player_defenses
-      break if board.full? || board.someone_won_round?
+      alternate_current_player
+      current_player_turn
+      break if board.full?
+      break current_player.add_point! if board.someone_won_round?
     end
   end
 
-  def switch_current_player
+  def alternate_current_player
     self.current_player = (current_player == player ? computer : player)
   end
 
-  def current_player_defenses
+  def current_player_turn
     current_player.mark(board)
   end
 
@@ -311,7 +320,7 @@ class TTTGame
     display_board
   end
 
-  def who_goes_first
+  def determine_who_goes_first
     puts
     puts "Would you like to go first this game? (y / n)"
     @first_to_play = if verified_input(['y', 'n'], "(y or n)") == 'n'
@@ -321,7 +330,7 @@ class TTTGame
                      end
   end
 
-  def reset_round_first_player
+  def reset_who_goes_first
     self.current_player = first_to_play == computer ? player : computer
   end
 
@@ -341,10 +350,9 @@ class TTTGame
     puts centered("#{current_player} won the game!")
   end
 
-  def display_winner_add_point
+  def display_winner_and_points
     clear_screen_and_display_board
     if determine_winner
-      current_player.add_point!
       puts centered("#{determine_winner} won!!")
     else
       puts centered("It's a tie!")
@@ -374,28 +382,28 @@ class TTTGame
     system "clear"
   end
 
-  def gamers_marker_reset
+  def reset_gamers_markers
     player.choose_marker
     computer.assign_opposite_marker(player)
   end
 
   def reset_round!
-    puts "Press enter to continue"
+    puts "Press enter to continue."
     gets
     clear
     puts
     puts "Let's play again!"
     puts
     board.reset!
-    reset_round_first_player
-    gamers_marker_reset
+    reset_who_goes_first
+    reset_gamers_markers
   end
 
   def reset_game!
     clear
-    who_goes_first
-    reset_round_first_player
-    gamers_marker_reset
+    determine_who_goes_first
+    reset_who_goes_first
+    reset_gamers_markers
     board.reset!
     player.reset_points!
     computer.reset_points!
