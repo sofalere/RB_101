@@ -33,6 +33,4 @@ end
 bob = Person.new('Robert Smith')
 rob = Person.new('Robert Smith')
 
-p bob == rob
-
 p rob.name == bob.name

@@ -1,31 +1,3 @@
-=begin
-twenty one is a 2 player game
-
-- the player and the dealer get two cards, the player can see 1 of the dealers
-- if the player hits, he gets another card until he busts, or stays
-- if the player stays the dealers card is revealed
-- if the dealers card total is less than 17, the dealer gets another card
-- whoever has the total closest to 21 wins
-- if theyre the same, its a tie, no one wins
-
-Participant
--hit
--stay
--bust?
--total
-
-Player
-Dealer
-
-Deck
--deal
-
-Card
--ace?
-=end
-
-require 'pry'
-
 module Verifiable
   def verified_input(valid, prompt)
     input = nil
