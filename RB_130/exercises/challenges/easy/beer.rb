@@ -32,7 +32,7 @@ when == 0 `no more bottles'\ "Go to the store and buy some more,
             99 bottles of beer on the wall.\n" Capitalize verse
 
 =end
-#beer song class
+
 class BeerSong
   def self.lyrics
     verses(99, 0)

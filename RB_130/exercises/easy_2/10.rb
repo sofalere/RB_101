@@ -1,5 +1,10 @@
-def each_cons(array, amount)
-  args = 
+def each_cons(array, length)
+  0.upto(array.size - length) do |start|
+    sequence = array[start,length]
+    sequence = sequence[0] if sequence.size == 1
+    yield(sequence)
+  end
+  nil
 end
 
 hash = {}
