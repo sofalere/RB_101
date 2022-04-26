@@ -28,8 +28,8 @@ class Todo
 
   def ==(otherTodo)
     title == otherTodo.title &&
-      description == otherTodo.description &&
-      done == otherTodo.done
+    description == otherTodo.description &&
+    done == otherTodo.done
   end
 end
 
@@ -62,11 +62,11 @@ class TodoList
   end
 
   def shift
-    todos.pop
+    todos.shift
   end
 
   def pop
-    todos.shift
+    todos.pop
   end
 
   def to_a
@@ -115,7 +115,7 @@ class TodoList
     new_list
   end
   
-   def each
+  def each
     todos.each { |todo| yield(todo) }
     self
   end
@@ -166,22 +166,18 @@ list.add(todo3)                 # adds todo3 to end of list, returns list
 
 p list.size                       # returns 3
 
-# first
 p list.first                      # returns todo1, which is the first item in the list
 
-# last
 p list.last                       # returns todo3, which is the last item in the list
 
-#to_a
 p list.to_a                      # returns an array of all items in the list
 
-#done?
 p list.done?                     # returns true if all todos in the list are done, otherwise false
 
-# list.item_at                    # raises ArgumentError
-puts
+#p list.item_at                   # raises ArgumentError
+
 p list.item_at(1)                 # returns 2nd item in list (zero based index)
-# p list.item_at(100)               # raises IndexError
+# p list.item_at(100)             # raises IndexError
 
 # list.mark_done_at               # raises ArgumentError
 p list.mark_done_at(1)            # marks the 2nd item as done
@@ -242,6 +238,5 @@ list.add(todo3)
 
 todo1.done!
 
-results = list.select { |todo| todo.done? }    # you need to implement this method
-
+results = list.select { |todo| todo.done? }    
 puts results.inspect
