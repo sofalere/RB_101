@@ -14,47 +14,49 @@ require 'date'
 require 'date'
 
 class Meetup
-  attr_reader :date, :month, :year
-  
   def initialize(year, month)
     @month = month
     @year = year
-    @date = Date.new(year, month)
+    @date_obj = Date.new(year, month)
   end
-  
+
   def day(day_str, descriptor_str)
     descriptor = convert(descriptor_str)
-    @day_sym = (day_str.downcase + '?').to_sym
-    dates = create_dates
-    descriptor == 't' ? teenth(dates) : dates[descriptor]
+    dates = create_dates(day_str)
+
+    descriptor == :t ? teenth(dates) : dates[descriptor]
   end
-  
-  def create_dates
-    date.step(create_date).select(&@day_sym).select do |dates| 
-      dates.month == month 
+
+  private
+
+  attr_reader :date_obj, :month, :year
+
+  def create_dates(day_str)
+    day_sym = (day_str.downcase + '?').to_sym
+    all = []
+    date_obj.step(date_obj << -1) do |date|
+       all << date if date.send(day_sym) && date.month == month
     end
+    all
   end
-  
+
   def teenth(dates)
     dates.find { |date| (13..19).include?(date.day) }
   end
-  
-  def create_date
-    next_month, next_year = (month + 1), year
-    next_month, next_year = 1, year + 1 if next_month > 12
-    Date.new(next_year, next_month)
-  end
-  
+
   def convert(descriptor_str)
     case descriptor_str.downcase
-    when 'first' then 0
+    when 'first'  then 0
     when 'second' then 1
-    when 'third' then 2
+    when 'third'  then 2
     when 'fourth' then 3
-    when 'fifth' then 4
-    when 'last' then -1
-    when 'teenth' then 't'
+    when 'fifth'  then 4
+    when 'last'   then -1
+    when 'teenth' then :t
     else raise ArgumentError
     end
   end
 end
+
+
+p Meetup.new(2016, 5).day('Wednesday', 'last')
