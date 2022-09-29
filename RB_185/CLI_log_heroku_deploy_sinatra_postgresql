@@ -1,0 +1,122 @@
+# Create new git repo
+
+SofsRubies~/projects/todos_with_db_185$ git init
+
+SofsRubies~/projects/todos_with_db_185$ git add -A
+
+SofsRubies~/projects/todos_with_db_185$ git commit -m 'sinatra db todos'
+
+SofsRubies~/projects/todos_with_db_185$ git branch -m main
+
+SofsRubies~/projects/todos_with_db_185$ git remote add origin 'URL'
+
+SofsRubies~/projects/todos_with_db_185$ git push -u origin main
+--enter username and password
+
+SofsRubies~/projects/todos_with_db_185$ heroku local
+
+# Unable to run app in heroku local - Rack error, syntax error, erb file error
+# SOLUTION
+  - confirm valid ruby version
+
+SofsRubies~/projects/todos_with_db_185$ ruby -v
+ruby 3.1.2p20 (2022-04-12 revision 4491bb740a) [x86_64-linux]
+
+SofsRubies~/projects/todos_with_db_185$ which rubies
+/usr/bin/which: no rubies in (/home/ec2-user/.rvm/gems/ruby-3.1.2/bin:/home/ec2-user/.rvm/gems/ruby-3.1.2@global/bin:/home/ec2-user/.rvm/rubies/ruby-3.1.2/bin:/home/ec2-user/.rvm/bin:/home/ec2-user/.nvm/versions/node/v10.24.1/bin:/usr/local/bin:/bin:/usr/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/opt/aws/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin)
+
+SofsRubies~/projects/todos_with_db_185$ rvm list known
+ ...list of ruby versions
+
+SofsRubies~/projects/todos_with_db_185$ rvm install 2.7.2
+ ...installs ruby
+ 
+ 
+!- add `ruby "2.7.2" to Gemfile
+
+SofsRubies~/projects/todos_with_db_185$ bundle install
+
+
+SofsRubies~/projects/todos_with_db_185$ heroku login -i
+...enter password and email
+
+SofsRubies~/projects/todos_with_db_185$ heroku apps:create todos_with_db_185
+Creating ⬢ todos_with_db_185... !
+ ▸    Name must start with a letter, end with a letter or digit and can only contain lowercase letters, digits, and dashes.
+SofsRubies~/projects/todos_with_db_185$ heroku apps:create todos-with-db-185
+Creating ⬢ todos-with-db-185... done
+https://todos-with-db-185.herokuapp.com/ | https://git.heroku.com/todos-with-db-185.git
+
+SofsRubies~/projects/todos_with_db_185$ heroku addons:create heroku-postgresql:hobby-dev todos-with-db-185
+ ▸    Unexpected argument todos-with-db-185
+
+SofsRubies~/projects/todos_with_db_185$ heroku addons:create heroku-postgresql:hobby-dev
+Creating heroku-postgresql:hobby-dev on ⬢ todos-with-db-185... free
+Database has been created and is available
+ ! This database is empty. If upgrading, you can transfer
+ ! data from another database with pg:copy
+Created postgresql-objective-18717 as DATABASE_URL
+Use heroku addons:docs heroku-postgresql to view documentation
+
+SofsRubies~/projects/todos_with_db_185$ heroku pg:psql -a todos-with-db-185 < schema.sql
+--> Connecting to postgresql-objective-18717
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+
+SofsRubies~/projects/todos_with_db_185$ git add -A
+
+SofsRubies~/projects/todos_with_db_185$ git commit -m 'changed ruby version to deploy on heroku'
+[main 8300f6e] changed ruby version to deploy on heroku
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+SofsRubies~/projects/todos_with_db_185$ git push heroku main
+Enumerating objects: 38, done.
+Counting objects: 100% (38/38), done.
+Compressing objects: 100% (36/36), done.
+Writing objects: 100% (38/38), 85.71 KiB | 3.57 MiB/s, done.
+Total 38 (delta 9), reused 0 (delta 0), pack-reused 0
+remote: Compressing source files... done.
+remote: Building source:
+remote: 
+remote: -----> Building on the Heroku-22 stack
+remote: -----> Determining which buildpack to use for this app
+remote: -----> Ruby app detected
+remote: -----> Installing bundler 1.17.3
+remote: -----> Removing BUNDLED WITH version in the Gemfile.lock
+remote: -----> Compiling Ruby/Rack
+remote:        Command: 'set -o pipefail; curl -L --fail --retry 5 --retry-delay 1 --connect-timeout 3 --max-time 30 https://heroku-buildpack-ruby.s3.us-east-1.amazonaws.com/heroku-22/ruby-2.7.2.tgz -s -o - | tar zxf - ' failed on attempt 1 of 3.
+remote:        Command: 'set -o pipefail; curl -L --fail --retry 5 --retry-delay 1 --connect-timeout 3 --max-time 30 https://heroku-buildpack-ruby.s3.us-east-1.amazonaws.com/heroku-22/ruby-2.7.2.tgz -s -o - | tar zxf - ' failed on attempt 2 of 3.
+remote: 
+remote:  !
+remote:  !     The Ruby version you are trying to install does not exist on this stack.
+remote:  !     
+remote:  !     You are trying to install ruby-2.7.2 on heroku-22.
+remote:  !     
+remote:  !     Ruby ruby-2.7.2 is present on the following stacks:
+remote:  !     
+remote:  !     - heroku-18
+remote:  !     - heroku-20
+remote:  !     
+remote:  !     Heroku recommends you use the latest supported Ruby version listed here:
+remote:  !     https://devcenter.heroku.com/articles/ruby-support#supported-runtimes
+remote:  !     
+remote:  !     For more information on syntax for declaring a Ruby version see:
+remote:  !     https://devcenter.heroku.com/articles/ruby-versions
+remote:  !
+remote:  !     Push rejected, failed to compile Ruby app.
+remote: 
+remote:  !     Push failed
+remote: Verifying deploy...
+remote: 
+remote: !       Push rejected to todos-with-db-185.
+remote: 
+To https://git.heroku.com/todos-with-db-185.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://git.heroku.com/todos-with-db-185.git'
+
+SofsRubies~/projects/todos_with_db_185$ heroku stack:set heroku-20
+Setting stack to heroku-20... done
+
+SofsRubies~/projects/todos_with_db_185$ git push heroku main
+...pushed to git!
